@@ -62,6 +62,16 @@ impl Packet {
         }
     }
 
+    /// See unreliable
+    pub fn unreliable_boxed(addr: SocketAddr, payload: Box<[u8]>) -> Packet {
+        Packet {
+            addr,
+            payload: payload,
+            delivery: DeliveryGuarantee::Unreliable,
+            ordering: OrderingGuarantee::None,
+        }
+    }
+
     /// Creates a new unreliable sequenced packet by passing the receiver, data.
     ///
     /// Unreliable Sequenced; Packets can be dropped, but could not be duplicated and arrive in sequence.
@@ -155,6 +165,11 @@ impl Packet {
     /// Returns the payload of this packet.
     pub fn payload(&self) -> &[u8] {
         &self.payload
+    }
+
+    /// Consumes the packet and returns a box to it
+    pub fn payload_boxed(self) -> Box<[u8]> {
+        self.payload
     }
 
     /// Returns the address of this packet.
